@@ -26,8 +26,19 @@ class DiceHandler(InputHandler):
         dietype = int(match.groups()[1])
         return sum(random.randint(1,dietype) for i in range(repeats))
 
+class FateDiceHandler(InputHandler):
+    def __init__(self):
+        self.regex = "([0-9]*)F"
+    def output(self, match):
+        if match.groups()[0]:
+            repeats = int(match.groups()[0])
+        else:
+            repeats = 1
+        return sum(random.randint(-1,1) for i in range(repeats))
+
 def evaluate(input_string):
-    literal_str = DiceHandler()(input_string)
+    literal_str = FateDiceHandler()(input_string)
+    literal_str = DiceHandler()(literal_str)
     return numexpr.evaluate(literal_str)
 
 def simulate(input_string, report_cumulative=False):
@@ -71,7 +82,7 @@ def print_graph(results, cumulative=False):
 
     for key in sorted(results.keys()):
         bar_length = round(results[key]/maxvalue*total_bar_length)
-        print(("{:<"+ str(maxvalue_len)+"}{:7.3f}%  {}").format(
+        print(("{:<"+ str(maxvalue_len+1)+"}{:7.3f}%  {}").format(
                         str(key)+":",
                         results[key]/count*100,
                         u"\u2588"*bar_length + " "*(total_bar_length-bar_length+1)
