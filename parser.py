@@ -13,6 +13,17 @@ class InputHandler:
     def __repr__(self):
         return "H({})".format(self.match_str)
 
+class BracketHandler(InputHandler):
+    left_bracket = "("
+    right_bracket = ")"
+    regex = "[\{}\{}]".format(left_bracket, right_bracket)
+
+    def is_left_bracket(self):
+        return self.match_str == self.left_bracket
+
+    def is_right_bracket(self):
+        return self.match_str == self.right_bracket
+
 class OperatorHandler(InputHandler):
     regex = "[\+\*]"
     precedence = {"+":0, "*":1}
@@ -104,15 +115,18 @@ def _parse(input_string):
     infix_list = []
 
     current_position = 0
-    for operator_match in re.finditer("[\(\)]|"+OperatorHandler.regex, input_string):
-        operand = input_string[current_position:operator_match.span()[0]]
-        operator = operator_match[0]
+    for operator_match in re.finditer(BracketHandler.regex+"|"+OperatorHandler.regex, input_string):
+        operand = input_string[current_position:operator_match.span()[0]].strip()
+        operator = operator_match[0].strip()
         current_position = operator_match.span()[1]
 
         if len(operand)>0:
             infix_list.append(handle_operand(operand))
-        infix_list.append(OperatorHandler(operator))
-    if len(input_string) > 0:
+        if OperatorHandler(operator).match():
+            infix_list.append(OperatorHandler(operator))
+        elif BracketHandler(operator).match():
+            infix_list.append(BracketHandler(operator))
+    if len(input_string[current_position:].strip()) > 0:
         infix_list.append(handle_operand(input_string[current_position:]))
     postfix_list = _infix_to_postfix(infix_list)
 
@@ -161,14 +175,17 @@ def _infix_to_postfix(infix_input):
                 top_token = get_top_token()
             operator_stack.append(token)
 
-        elif token is "(":
+        elif (type(token) == BracketHandler) and \
+            token.is_left_bracket():
             operator_stack.append(token)
 
-        elif token is ")":
+        elif (type(token) == BracketHandler) and \
+            token.is_right_bracket():
             top_token = get_top_token()
             if not top_token:
                 raise ValueError("Mismatched parenthesis")
-            while top_token != "(":
+            while (type(top_token) != BracketHandler) or \
+                    (not top_token.is_left_bracket()):
                 output.append(operator_stack.pop())
                 top_token = get_top_token()
             operator_stack.pop()
