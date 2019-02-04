@@ -17,7 +17,7 @@ class DiscreteDistribution:
         return self.__add__(other)
 
     def __mul__(self, other):
-        return self._mul_distribution(other, operator.mul)
+        return self._add_distribution(other, operator.mul)
 
     def _add_distribution(self, other_distr, operation):
         distr_dict = {}
@@ -27,12 +27,6 @@ class DiscreteDistribution:
                     distr_dict[operation(my_key, other_key)] += self[my_key]*other_distr[other_key]
                 except KeyError:
                     distr_dict[operation(my_key, other_key)] = self[my_key]*other_distr[other_key]
-        return DiscreteDistribution(distr_dict)
-
-    def _add_numeric(self, number, operation):
-        distr_dict = {}
-        for my_key in self._distribution:
-            distr_dict[operation(my_key, number)] = self[my_key]
         return DiscreteDistribution(distr_dict)
 
     def __getitem__(self, key):
