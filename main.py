@@ -2,15 +2,16 @@ import sys
 import re
 import random
 import shutil
+import math
 
 import parser
 import distribution
 
-def solve(input_string, report_cumulative=False, analytic=False):
+def solve(input_string, report_cumulative=False, analytic=False, show_odds=False):
     result_distribution = distribution.DiscreteDistribution({1:1})
     if analytic:
         result_distribution = parser.calculate(input_string, analytic)
-        print_graph(result_distribution, report_cumulative)
+        print_graph(result_distribution, report_cumulative, show_odds)
     else:
         count = 0
         results = {}
@@ -26,13 +27,13 @@ def solve(input_string, report_cumulative=False, analytic=False):
 
                 if (count+1)%1000 == 0:
                     result_distribution = distribution.DiscreteDistribution(results)
-                    print_height = print_graph(result_distribution, report_cumulative)
+                    print_height = print_graph(result_distribution, report_cumulative, show_odds)
                     print(f"\033[F"*(print_height+2))
 
         except KeyboardInterrupt:
-            print_graph(result_distribution, report_cumulative)
+            print_graph(result_distribution, report_cumulative, show_odds)
 
-def print_graph(results, cumulative=False):
+def print_graph(results, cumulative=False, show_odds=False):
     print("Expected value: {:6.3f}".format(sum(i*results[i]/sum(results.chances()) for i in results.values())))
 
     if cumulative:
@@ -47,7 +48,16 @@ def print_graph(results, cumulative=False):
 
     for key in sorted(results.values()):
         bar_length = round(results[key]/maxvalue*total_bar_length)
-        print(("{:<"+ str(maxvalue_len+1)+"}{:7.3f}%  {}").format(
+        if show_odds:
+            p_gcd = math.gcd(results[key],count-results[key])
+            probs_str = "{}:{}".format(results[key]//p_gcd,(count-results[key])//p_gcd)
+            print(("{:<"+ str(maxvalue_len+1)+"}{}  {}").format(
+                            str(key)+":",
+                            "{:7.3f}%".format(results[key]/count*100),
+                            probs_str
+                          ))
+        else:
+            print(("{:<"+ str(maxvalue_len+1)+"}{:7.3f}%  {}").format(
                         str(key)+":",
                         results[key]/count*100,
                         u"\u2588"*bar_length + " "*(total_bar_length-bar_length+1)
@@ -62,8 +72,9 @@ def main(arg_string):
 
     analytic = "A" in instructions
     cumulative = "C" in instructions
+    show_odds = "O" in instructions
 
-    solve(calculation, report_cumulative=cumulative, analytic=analytic)
+    solve(calculation, report_cumulative=cumulative, analytic=analytic, show_odds=show_odds)
 
 if __name__ == "__main__":
     main(" ".join(sys.argv[1:]))
