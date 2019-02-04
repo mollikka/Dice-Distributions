@@ -19,11 +19,20 @@ class DiscreteDistribution:
     def __mul__(self, other):
         return self._add_distribution(other, operator.mul)
 
+    def __sub__(self, other):
+        return self._add_distribution(other, operator.sub)
+
     def __lt__(self, other):
         return self._add_distribution(other, operator.lt)
 
     def __gt__(self, other):
         return self._add_distribution(other, operator.gt)
+
+    def __le__(self, other):
+        return self._add_distribution(other, operator.le)
+
+    def __ge__(self, other):
+        return self._add_distribution(other, operator.ge)
 
     def __eq__(self, other):
         return self._add_distribution(other, operator.eq)

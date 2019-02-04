@@ -25,17 +25,23 @@ class BracketHandler(InputHandler):
         return self.match_str == self.right_bracket
 
 class OperatorHandler(InputHandler):
-    regex = "[\<\>\=\+\*]"
+    regex = "(\<\=)|(\>\=)|[\<\>\=\+\*\-]"
     precedence = {  "<":-1,
                     ">":-1,
                     "=":-1,
+                    "<=":-1,
+                    ">=":-1,
                     "+":0,
+                    "-":0,
                     "*":1
                  }
     symbol_to_operation = { "<": operator.lt,
                             ">": operator.gt,
+                            "<=": operator.le,
+                            ">=": operator.ge,
                             "=": operator.eq,
                             "+": operator.add,
+                            "-": operator.sub,
                             "*": operator.mul,
                           }
 
