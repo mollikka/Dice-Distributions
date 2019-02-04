@@ -25,8 +25,19 @@ class BracketHandler(InputHandler):
         return self.match_str == self.right_bracket
 
 class OperatorHandler(InputHandler):
-    regex = "[\+\*]"
-    precedence = {"+":0, "*":1}
+    regex = "[\<\>\=\+\*]"
+    precedence = {  "<":-1,
+                    ">":-1,
+                    "=":-1,
+                    "+":0,
+                    "*":1
+                 }
+    symbol_to_operation = { "<": operator.lt,
+                            ">": operator.gt,
+                            "=": operator.eq,
+                            "+": operator.add,
+                            "*": operator.mul,
+                          }
 
     def __lt__(self, other):
         return self.precedence[self.match_str] < self.precedence[other.match_str]
@@ -45,10 +56,7 @@ class OperatorHandler(InputHandler):
         return self.precedence[self.match_str] == self.precedence[other.match_str]
 
     def __call__(self):
-        if self.match_str == "+":
-            return operator.add
-        elif self.match_str == "*":
-            return operator.mul
+        return self.symbol_to_operation[self.match_str]
 
 class OperandHandler(InputHandler):
 

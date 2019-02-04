@@ -19,6 +19,15 @@ class DiscreteDistribution:
     def __mul__(self, other):
         return self._add_distribution(other, operator.mul)
 
+    def __lt__(self, other):
+        return self._add_distribution(other, operator.lt)
+
+    def __gt__(self, other):
+        return self._add_distribution(other, operator.gt)
+
+    def __eq__(self, other):
+        return self._add_distribution(other, operator.eq)
+
     def _add_distribution(self, other_distr, operation):
         distr_dict = {}
         for my_key in self._distribution:
