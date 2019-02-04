@@ -54,10 +54,10 @@ class IntegerHandler(OperandHandler):
     regex = "([0-9]+)"
 
     def sample(self):
-        return 1
+        return int(self.match_str)
 
     def solve(self):
-        return distribution.DiscreteDistribution({1:1})
+        return distribution.DiscreteDistribution({int(self.match_str):1})
 
 class DiceHandler(OperandHandler):
     regex = "([0-9]*)d([1-9][0-9]*)"
