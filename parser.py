@@ -98,10 +98,15 @@ class DiceHandler(OperandHandler):
         dietype = int(match.groups()[1])
         return distribution.DiceDistribution(dietype)
 
-class FateDiceHandler(OperandHandler):
-    regex = "F"
+class FateDiceHandler(DiceHandler):
+    regex = "([0-9]*)F"
 
     def _get_distribution(self):
+        match = self.match()
+        if match.groups()[0]:
+            self.repeats = int(match.groups()[0])
+        else:
+            self.repeats = 1
         return distribution.DiscreteDistribution({-1:2, 0:2, 1:2})
 
 def calculate(input_string, analytic):
