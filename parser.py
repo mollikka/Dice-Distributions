@@ -25,7 +25,6 @@ class BracketHandler(InputHandler):
         return self.match_str == self.right_bracket
 
 class OperatorHandler(InputHandler):
-    regex = "(\<\=)|(\>\=)|[\<\>\=\+\*\-]"
     precedence = {  "<":-1,
                     ">":-1,
                     "=":-1,
@@ -44,6 +43,7 @@ class OperatorHandler(InputHandler):
                             "-": operator.sub,
                             "*": operator.mul,
                           }
+    regex = "|".join("("+"".join("\\"+j for j in i)+")" for i in precedence.keys())
 
     def __lt__(self, other):
         return self.precedence[self.match_str] < self.precedence[other.match_str]
