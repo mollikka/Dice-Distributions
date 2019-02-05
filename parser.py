@@ -146,7 +146,7 @@ def _parse(input_string):
         elif BracketHandler(operator).match():
             infix_list.append(BracketHandler(operator))
     if len(input_string[current_position:].strip()) > 0:
-        infix_list.append(handle_operand(input_string[current_position:]))
+        infix_list.append(handle_operand(input_string[current_position:].strip()))
     postfix_list = _infix_to_postfix(infix_list)
 
     return postfix_list
