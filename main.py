@@ -78,7 +78,7 @@ def print_instructions():
     print("Also supports constant integers")
     print()
     print("Options:")
-    print("- 'A', returns an analytic result instead of a statistical one")
+    print("- 'S', runs a statistical simulation instead of giving analytic results")
     print("- 'O', displays odds instead of a graph result")
     print("- 'C', displays the result in cumulative form")
 
@@ -88,7 +88,7 @@ def main(arg_string):
     except ValueError:
         instructions, calculation = "", arg_string
 
-    analytic = "A" in instructions
+    analytic = not "S" in instructions
     cumulative = "C" in instructions
     show_odds = "O" in instructions
 
