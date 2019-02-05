@@ -64,6 +64,24 @@ def print_graph(results, cumulative=False, show_odds=False):
                       ))
     return len(results.values())
 
+def print_instructions():
+    print("usage: {} 'dice-math'".format(sys.argv[0]))
+    print("usage: {} 'options:dice-math'".format(sys.argv[0]))
+    print()
+    print("Evaluate probabilistic dice math expressions.")
+    print()
+    print("Supported dice types:")
+    print("- Regular dice '[R]dN'. Throws an N sided die R times.")
+    print("- Fate dice '[R]F'. Throws a Fate die (-1,-1,0,0,1,1) R times.")
+    print("Supported operators:")
+    print("+, -, *, =, <, <=, >, =>")
+    print("Also supports constant integers")
+    print()
+    print("Options:")
+    print("- 'A', returns an analytic result instead of a statistical one")
+    print("- 'O', displays odds instead of a graph result")
+    print("- 'C', displays the result in cumulative form")
+
 def main(arg_string):
     try:
         instructions, calculation = arg_string.split(':')
@@ -77,4 +95,9 @@ def main(arg_string):
     solve(calculation, report_cumulative=cumulative, analytic=analytic, show_odds=show_odds)
 
 if __name__ == "__main__":
-    main(" ".join(sys.argv[1:]))
+    try:
+        if len(sys.argv[1:])==0:
+            raise ValueError
+        main(" ".join(sys.argv[1:]))
+    except ValueError:
+        print_instructions()
