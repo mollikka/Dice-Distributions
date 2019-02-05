@@ -157,8 +157,8 @@ def _eval_postfix(postfix_list, analytic):
 
     for handler in postfix_list:
         if type(handler) == OperatorHandler:
-            operand1 = value_stack.pop()
             operand2 = value_stack.pop()
+            operand1 = value_stack.pop()
             value_stack.append(handler()(operand1, operand2))
         else:
             value_stack.append(handler(analytic))
