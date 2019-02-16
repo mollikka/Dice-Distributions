@@ -43,7 +43,7 @@ class OperatorHandler(InputHandler):
                             "-": operator.sub,
                             "*": operator.mul,
                           }
-    regex = "|".join("("+"".join("\\"+j for j in i)+")" for i in precedence.keys())
+    regex = "|".join("("+"".join("\\"+j for j in i)+")" for i in (sorted(precedence.keys(), key=len, reverse=True)))
 
     def __lt__(self, other):
         return self.precedence[self.match_str] < self.precedence[other.match_str]
