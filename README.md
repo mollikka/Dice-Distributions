@@ -11,7 +11,7 @@ python main.py 'options:dice-math'
 where dice-math is a standard mathematical infix expression.
 
 ```
-> python main.py '2d6 + 4'
+> python main.py 'A:2d6 + 4'
 Expected value: 11.000
 6:   2.778%  ██████████████
 7:   5.556%  ███████████████████████████
@@ -25,7 +25,7 @@ Expected value: 11.000
 15:  5.556%  ███████████████████████████
 16:  2.778%  ██████████████
 
-> python main.py "d20>=3d6"
+> python main.py "A:d20>=3d6"
 Expected value:  0.525
 False: 47.500%  ███████████████████████████████████████████████████████████████████████
 True:  52.500%  ██████████████████████████████████████████████████████████████████████████████
@@ -52,12 +52,13 @@ True:  52.500%  █████████████████████�
 
 Running options change the way results are displayed.
 
+- ```A```, gives analytic results
 - ```S```, runs a statistical simulation instead of giving analytic results. Give interrupt signal (Ctrl-C) to stop.
 - ```O```, displays odds instead of a graph result
 - ```C```, displays the result in cumulative form
 
 ```
-> python main.py 'O:2d6'
+> python main.py 'AO:2d6'
 Expected value:  7.000
 2:   2.778%  1:35
 3:   5.556%  1:17

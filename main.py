@@ -7,8 +7,12 @@ import math
 import parser
 import distribution
 
-def solve(input_string, report_cumulative=False, analytic=False, show_odds=False):
+def solve(input_string, report_cumulative=False, analytic=False, show_odds=False, just_roll=False):
     result_distribution = distribution.DiscreteDistribution({1:1})
+    if just_roll:
+        result = parser.calculate(input_string, False)
+        print(result)
+        return
     if analytic:
         result_distribution = parser.calculate(input_string, analytic)
         print_graph(result_distribution, report_cumulative, show_odds)
@@ -78,7 +82,9 @@ def print_instructions():
     print("Also supports constant integers")
     print()
     print("Options:")
-    print("- 'S', runs a statistical simulation instead of giving analytic results")
+    print("- 'A', gives analytic results")
+    print("- 'S', runs a statistical simulation")
+    print()
     print("- 'O', displays odds instead of a graph result")
     print("- 'C', displays the result in cumulative form")
 
@@ -88,11 +94,18 @@ def main(arg_string):
     except ValueError:
         instructions, calculation = "", arg_string
 
-    analytic = not "S" in instructions
+    analytic = "A" in instructions
+    statistical = "S" in instructions
+    just_roll = (not analytic) and (not statistical)
     cumulative = "C" in instructions
     show_odds = "O" in instructions
 
-    solve(calculation, report_cumulative=cumulative, analytic=analytic, show_odds=show_odds)
+    if analytic:
+        solve(calculation, report_cumulative=cumulative, analytic=True, show_odds=show_odds)
+    if statistical:
+        solve(calculation, report_cumulative=cumulative, analytic=False, show_odds=show_odds)
+    if just_roll:
+        solve(calculation, just_roll=True)
 
 if __name__ == "__main__":
     try:
